@@ -43,7 +43,7 @@ namespace LibCopy
         /// <returns></returns>
         public static string FileName(string filePath)
         {
-            if (VerifyFile(filePath) == false)
+            if (filePath == null)
                 throw new ArgumentNullException();
 
             // Todo: Find a less hacky method of getting the file's name.
