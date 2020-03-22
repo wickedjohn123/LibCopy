@@ -14,14 +14,14 @@ namespace LibCopy
         /// Verifies a file exists based on the path given though the string.
         /// </summary>
         /// <param name="location">the path to the file.</param>
-        /// <returns></returns>
+        /// <returns>a boolean value based on if the file is valid or not.</returns>
         public static bool VerifyFile(string location) => File.Exists(location);
         
         /// <summary>
         /// Verifies a directory based on the path given though the string.
         /// </summary>
         /// <param name="directory">the path to the directory.</param>
-        /// <returns></returns>
+        /// <returns>a boolean value based on if the directory is valid or not.</returns>
         public static bool VerifyDirectory(string directory) => Directory.Exists(directory);
 
         /// <summary>
