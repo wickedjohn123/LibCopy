@@ -9,37 +9,35 @@ namespace LibraryTests
         [TestMethod]
         public void NullCheckFileExists()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.VerifyFile(null));
-        }
-
-        [TestMethod]
-        public void EmptyCheckFileExists()
-        {
-            Assert.ThrowsException<ArgumentException>(() => LibCopy.Utils.VerifyFile(""));
-        }
-
-        [TestMethod]
-        public void WhitespaceCheckFileExists()
-        {
-            Assert.ThrowsException<ArgumentException>(() => LibCopy.Utils.VerifyFile(" "));
+            try
+            {
+                var res = LibCopy.Utils.VerifyFile(null);
+                Assert.IsFalse(res);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+            }
         }
 
         [TestMethod]
         public void NullCheckDirectoryExists()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.VerifyDirectory(null));
+            try
+            {
+                var res = LibCopy.Utils.VerifyDirectory(null);
+                Assert.IsFalse(res);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+            }
         }
 
         [TestMethod]
-        public void EmptyCheckDirectoryExists()
+        public void NullCheckFilename()
         {
-            Assert.ThrowsException<ArgumentException>(() => LibCopy.Utils.VerifyDirectory(""));
-        }
-
-        [TestMethod]
-        public void WhitespaceCheckDirectoryExists()
-        {
-            Assert.ThrowsException<ArgumentException>(() => LibCopy.Utils.VerifyDirectory(" "));
+            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileName(null));
         }
     }
 }
