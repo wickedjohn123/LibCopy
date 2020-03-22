@@ -39,5 +39,17 @@ namespace LibraryTests
         {
             Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileName(null));
         }
+
+        [TestMethod]
+        public void NullCheckFilesize()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileSize(null));
+        }
+
+        [TestMethod]
+        public void NullCheckFilesizeArray()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileSize(new string[] { null, null }));
+        }
     }
 }
