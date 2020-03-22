@@ -84,7 +84,7 @@ namespace LibraryTests
                 var fn = new FileInfo(filePath).Name;
                 var libFn = LibCopy.Utils.FileName(filePath);
 
-                Assert.AreEqual(filePath, fn);
+                Assert.AreEqual(libFn, fn);
             }
         }
 
