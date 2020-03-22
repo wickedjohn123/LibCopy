@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCopy", "LibCopy\LibCopy.csproj", "{D083DB64-1913-4FAC-9894-1A66E4EFF86D}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibCopy", "LibCopy\LibCopy.csproj", "{D083DB64-1913-4FAC-9894-1A66E4EFF86D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "LibraryTests\UnitTests.csproj", "{AA945AAC-D5AB-4A84-A7C3-E07140B93C98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,15 @@ Global
 		{D083DB64-1913-4FAC-9894-1A66E4EFF86D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D083DB64-1913-4FAC-9894-1A66E4EFF86D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D083DB64-1913-4FAC-9894-1A66E4EFF86D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA945AAC-D5AB-4A84-A7C3-E07140B93C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA945AAC-D5AB-4A84-A7C3-E07140B93C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA945AAC-D5AB-4A84-A7C3-E07140B93C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA945AAC-D5AB-4A84-A7C3-E07140B93C98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85738474-66CF-4B87-AB7B-874951B962CE}
 	EndGlobalSection
 EndGlobal
