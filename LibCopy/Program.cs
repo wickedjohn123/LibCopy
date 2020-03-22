@@ -19,7 +19,7 @@ namespace LibCopy
         {
             [Option('v', "Verbose", Required = false, HelpText = "Outputs current state of the application.", Default = false)]
             public bool Verbose  { get; set; }
-            [Option('f', "File Paths", Required = true, HelpText = "Location of the files the application will copy.")]
+            [Option('f', "File Paths", Required = true, HelpText = "Location of the files that the application will be copy.")]
             public string[] FilesToCopy { get; set; }
             [Option('d', "Directory to copy files into.", Required = true, HelpText = "Filepath where the files will be copied into.")]
             public string Directory { get; set; }
