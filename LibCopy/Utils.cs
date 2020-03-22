@@ -48,7 +48,7 @@ namespace LibCopy
 
             // Todo: Find a less hacky method of getting the file's name.
             string[] name = filePath.Split(Path.DirectorySeparatorChar);
-            return name[name.Length-1];
+            return name[name.Length - 1];
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace LibCopy
             {
                 if (file == null)
                     throw new ArgumentNullException();
-                
+
                 size += new FileInfo(file).Length;
             }
 
@@ -85,10 +85,10 @@ namespace LibCopy
                 Environment.Exit(1);
 
             int badFiles = 0;
-            
+
             if (verbose)
                 Console.WriteLine($"Size of files in bytes: {FileSize(files)}");
-            
+
             Parallel.ForEach(files, (x) =>
             {
                 if (!VerifyFile(x))
@@ -109,7 +109,7 @@ namespace LibCopy
                     File.Copy(x, $"{directory}\\{FileName(x)}");
                 }
             });
-            
+
             if (files.Length == badFiles)
                 Environment.Exit(2);
             else
