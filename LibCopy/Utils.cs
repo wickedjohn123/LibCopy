@@ -15,14 +15,26 @@ namespace LibCopy
         /// </summary>
         /// <param name="location">the path to the file.</param>
         /// <returns>a boolean value based on if the file is valid or not.</returns>
-        public static bool VerifyFile(string location) => File.Exists(location);
-        
+        public static bool VerifyFile(string location)
+        {
+            bool valid = false;
+            if (!string.IsNullOrWhiteSpace(location))
+                valid = File.Exists(location);
+            return valid;
+        }
+
         /// <summary>
         /// Verifies a directory based on the path given though the string.
         /// </summary>
         /// <param name="directory">the path to the directory.</param>
         /// <returns>a boolean value based on if the directory is valid or not.</returns>
-        public static bool VerifyDirectory(string directory) => Directory.Exists(directory);
+        public static bool VerifyDirectory(string directory)
+        {
+            bool valid = false;
+            if (!string.IsNullOrWhiteSpace(directory))
+                valid = Directory.Exists(directory);
+            return valid;
+        }
 
         /// <summary>
         /// Gets the file's name from the filepath.
