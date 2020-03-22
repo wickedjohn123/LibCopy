@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnitTests;
 
@@ -70,11 +71,35 @@ namespace LibraryTests
             }
         }
 
+        [TestMethod]
+        public void TestGetFilename()
+        {
+            var filenamePattern = "testfile(&|%|$|!|)(a|A)(|.txt|.TXT)(|.exe)";
+
+            var expanded = RegexExpander.Expand(filenamePattern);
+            var expandedPrefixed = expanded.Select(x => Path.Combine(this.basePath, "testgetfilename", x)).ToList();
+
+            foreach (var filePath in expandedPrefixed)
+            {
+                var fn = new FileInfo(filePath).Name;
+                var libFn = LibCopy.Utils.FileName(filePath);
+
+                Assert.Equals(filePath, fn);
+            }
+        }
+
         [TestCleanup]
         public void Cleanup()
         {
             if (Directory.Exists(this.basePath))
                 Directory.Delete(this.basePath, true);
+        }
+
+        private string CreateSubDirectory(params string[] dirnames)
+        {
+            string path = Path.Combine(this.basePath, Path.Combine(dirnames));
+            Directory.CreateDirectory(path);
+            return path;
         }
     }
 }
