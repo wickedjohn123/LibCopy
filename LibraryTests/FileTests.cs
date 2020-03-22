@@ -94,19 +94,39 @@ namespace LibraryTests
         {
             var expanded = RegexExpander.Expand(filenamePattern);
             var subdirA = CreateSubDirectory(Path.Combine("testfilesize", "folderA"));
-            var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
 
-            var expandedPrefixedA = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
+            var expandedPrefixed = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
 
-            var size = CreateAndFillFiles(expandedPrefixedA);
-            var libSize = LibCopy.Utils.FileSize(expandedPrefixedA.ToArray());
+            var size = CreateAndFillFiles(expandedPrefixed);
+            var libSize = LibCopy.Utils.FileSize(expandedPrefixed.ToArray());
             Assert.AreEqual(size, libSize);
         }
 
         [TestMethod]
         public void TestCopy()
         {
+            var expanded = RegexExpander.Expand(filenamePattern);
+            var subdirA = CreateSubDirectory(Path.Combine("testfilesize", "folderA"));
+            var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
 
+            var expandedPrefixedA = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
+            var expandedPrefixedB = expanded.Select(x => Path.Combine(subdirB, x)).ToList();
+
+            LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false);
+            var directories = Directory.GetDirectories(subdirB, "*", SearchOption.TopDirectoryOnly);
+            Assert.IsFalse(directories.Any()); // ensure there are no directories in the target dir
+            
+            foreach (var fileName in expanded) // ensure that all files that are in the source directory are also in the target directory
+            {
+                Assert.IsTrue(File.Exists(Path.Combine(subdirB, fileName)));
+            }
+
+            var files = Directory.GetFiles(subdirB);
+            foreach (var fileName in files) // ensure that all files that are in the target directory are also in the source directory
+            {
+                var filename1 = new FileInfo(fileName).Name;
+                Assert.IsTrue(File.Exists(Path.Combine(subdirA, fileName)));
+            }
         }
 
         [TestCleanup]
