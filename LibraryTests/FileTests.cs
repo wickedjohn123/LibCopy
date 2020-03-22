@@ -28,7 +28,7 @@ namespace LibraryTests
         [TestMethod]
         public void EnsureFileExists()
         {
-            Directory.CreateDirectory(Path.Combine(basePath, "fileexiststest"));
+            Directory.CreateDirectory(Path.Combine(this.basePath, "fileexiststest"));
 
             for (int i = 0; i < 10; i++)
             {
@@ -51,7 +51,7 @@ namespace LibraryTests
         [TestMethod]
         public void EnsureDirectoryExists()
         {
-            Directory.CreateDirectory(Path.Combine(basePath, "direxiststest"));
+            Directory.CreateDirectory(Path.Combine(this.basePath, "direxiststest"));
 
             for (int i = 0; i < 10; i++)
             {
