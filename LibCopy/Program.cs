@@ -38,9 +38,13 @@ namespace LibCopy
                 {
                     Utils.Copy(Directory.GetFiles(o.Xdirectory), o.Directory, o.Verbose);
                 }
-                else
+                else if (o.FilesToCopy.Length != 0)
                 {
                     Utils.Copy(o.FilesToCopy, o.Directory, o.Verbose);
+                }
+                else
+                {
+                    Environment.Exit(3);
                 }
             });
         }
