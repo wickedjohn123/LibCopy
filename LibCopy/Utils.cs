@@ -58,10 +58,13 @@ namespace LibCopy
         /// <returns>total size of all the files in bytes.</returns>
         public static float FileSize(params string[] files)
         {
+            if (files == null)
+                throw new ArgumentNullException();
+
             float size = 0;
             foreach (var file in files)
             {
-                if (VerifyFile(file) == false)
+                if (file == null)
                     throw new ArgumentNullException();
                 
                 size += new FileInfo(file).Length;
