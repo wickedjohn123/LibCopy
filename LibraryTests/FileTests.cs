@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace LibraryTests
     {
         private string basePath = null;
         private TestUtils utilObj = null;
+        private string filenamePattern = "testfile(&|%|$|!|)(a|A)(|.txt|.TXT)(|.exe)";
+
 
         [TestInitialize]
         public void Initialize()
@@ -74,9 +77,7 @@ namespace LibraryTests
         [TestMethod]
         public void TestGetFilename()
         {
-            var filenamePattern = "testfile(&|%|$|!|)(a|A)(|.txt|.TXT)(|.exe)";
-
-            var expanded = RegexExpander.Expand(filenamePattern);
+            var expanded = RegexExpander.Expand(this.filenamePattern);
             var expandedPrefixed = expanded.Select(x => Path.Combine(this.basePath, "testgetfilename", x)).ToList();
 
             foreach (var filePath in expandedPrefixed)
@@ -86,6 +87,26 @@ namespace LibraryTests
 
                 Assert.AreEqual(fn, libFn);
             }
+        }
+
+        [TestMethod]
+        public void TestFilesize()
+        {
+            var expanded = RegexExpander.Expand(this.filenamePattern);
+            var subdirA = CreateSubDirectory(Path.Combine("testfilesize", "folderA"));
+            var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
+
+            var expandedPrefixedA = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
+
+            var size = CreateAndFillFiles(expandedPrefixedA);
+            var libSize = LibCopy.Utils.FileSize(expandedPrefixedA.ToArray());
+            Assert.AreEqual(size, libSize);
+        }
+
+        [TestMethod]
+        public void TestCopy()
+        {
+
         }
 
         [TestCleanup]
@@ -100,6 +121,34 @@ namespace LibraryTests
             string path = Path.Combine(this.basePath, Path.Combine(dirnames));
             Directory.CreateDirectory(path);
             return path;
+        }
+
+        /// <summary>
+        /// Creates all specified files and returns the total number of bytes written.
+        /// </summary>
+        /// <param name="files">The filenames of the files that are to be created.</param>
+        /// <returns>The total number of bytes written.</returns>
+        private int CreateAndFillFiles(List<string> files)
+        {
+            int totalLength = 0;
+            int nextByte = 234;
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                var path = files[i];
+                int fileLength = nextByte * 500 + 512;
+                using (var handle = File.OpenWrite(path))
+                {
+                    for (int j = 0; j < fileLength; j++)
+                    {
+                        handle.WriteByte((byte)nextByte);
+                        nextByte = (nextByte * 9 + 25) % 255;
+                        totalLength++;
+                    }
+                }
+            }
+
+            return totalLength;
         }
     }
 }
