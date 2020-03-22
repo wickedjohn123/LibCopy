@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UnitTests
 {
-    class Util
+    class TestUtils
     {
         public string BasePath { get; }
 
@@ -16,12 +16,12 @@ namespace UnitTests
         private static int nextTempFileNumber = 0;
 
 
-        public Util(string basePath)
+        public TestUtils(string basePath)
         {
             this.BasePath = basePath;
         }
 
-        public static string GetTempFileName()
+        public string GetTempFileName()
         {
             return "tempfile" + GetAndIncrementNextTempFileNumber();
         }

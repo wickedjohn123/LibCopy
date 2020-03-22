@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibCopy", "LibCopy\LibCopy.csproj", "{D083DB64-1913-4FAC-9894-1A66E4EFF86D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "LibraryTests\UnitTests.csproj", "{AA945AAC-D5AB-4A84-A7C3-E07140B93C98}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D083DB64-1913-4FAC-9894-1A66E4EFF86D} = {D083DB64-1913-4FAC-9894-1A66E4EFF86D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
