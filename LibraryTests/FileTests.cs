@@ -111,9 +111,10 @@ namespace LibraryTests
             var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
 
             var expandedPrefixedA = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
-
+            var expandedPrefixedB = expanded.Select(x => Path.Combine(subdirB, x)).ToList();
+            
             CreateAndFillFiles(expandedPrefixedA);
-
+            
             LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false);
             var directories = Directory.GetDirectories(subdirB, "*", SearchOption.TopDirectoryOnly);
             Assert.IsFalse(directories.Any()); // ensure there are no directories in the target dir

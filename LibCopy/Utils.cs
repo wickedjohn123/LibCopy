@@ -56,8 +56,9 @@ namespace LibCopy
         /// <returns></returns>
         public static string FileName(string filePath)
         {
-            if (filePath == null)
-                throw new ArgumentNullException();
+            var ex = VerifyFile(filePath, Checkconditions.Null);
+            if (ex.Item1 == false)
+                throw ex.Item2;
 
             // Todo: Find a less hacky method of getting the file's name.
             string[] name = filePath.Split(Path.DirectorySeparatorChar);
@@ -94,9 +95,9 @@ namespace LibCopy
         /// <param name="verbose">specifies if console output is requires.</param>
         public static void Copy(string[] files, string directory, bool verbose)
         {
-            if (!VerifyDirectory(directory))
-                throw new DirectoryNotFoundException();
-
+            var dex = VerifyFile(directory);
+            if (dex.Item1)
+                throw dex.Item2;
             int badFiles = 0;
 
             if (verbose)
@@ -126,9 +127,10 @@ namespace LibCopy
                 }
             });
 
-            // wtf is this
             //if (files.Length == badFiles)
             //    Environment.Exit(2);
+            //else
+            //    Environment.Exit(0);
         }
 
         [Flags]
