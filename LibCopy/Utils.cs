@@ -33,7 +33,7 @@ namespace LibCopy
         {
             // Todo: Find a less hacky method of getting the file's name.
             string[] name = filePath.Split(Path.PathSeparator);
-            return name[name.Length];
+            return (name[name.Length-1].Split('.'))[0];
         }
 
         /// <summary>
