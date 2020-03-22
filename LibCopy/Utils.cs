@@ -43,6 +43,9 @@ namespace LibCopy
         /// <returns></returns>
         public static string FileName(string filePath)
         {
+            if (VerifyFile(filePath) == false)
+                throw new ArgumentNullException();
+
             // Todo: Find a less hacky method of getting the file's name.
             string[] name = filePath.Split(Path.DirectorySeparatorChar);
             return name[name.Length-1];
@@ -58,6 +61,9 @@ namespace LibCopy
             float size = 0;
             foreach (var file in files)
             {
+                if (VerifyFile(file) == false)
+                    throw new ArgumentNullException();
+                
                 size += new FileInfo(file).Length;
             }
 
@@ -95,8 +101,10 @@ namespace LibCopy
 
                     Interlocked.Increment(ref badFiles);
                 }
-                
-                File.Copy(x, $"{directory}\\{FileName(x)}");
+                else
+                {
+                    File.Copy(x, $"{directory}\\{FileName(x)}");
+                }
             });
             
             if (files.Length == badFiles)
