@@ -81,8 +81,8 @@ namespace LibCopy
         /// <param name="verbose">specifies if console output is requires.</param>
         public static void Copy(string[] files, string directory, bool verbose)
         {
-            if (VerifyDirectory(directory))
-                Environment.Exit(1);
+            if (!VerifyDirectory(directory))
+                throw new DirectoryNotFoundException();
 
             int badFiles = 0;
 
@@ -110,10 +110,9 @@ namespace LibCopy
                 }
             });
 
-            if (files.Length == badFiles)
-                Environment.Exit(2);
-            else
-                Environment.Exit(0);
+            // wtf is this
+            //if (files.Length == badFiles)
+            //    Environment.Exit(2);
         }
     }
 }
