@@ -12,7 +12,7 @@ namespace LibraryTests
     {
         private string basePath = null;
         private TestUtils utilObj = null;
-        private const string filenamePattern = "testfile(&|%|$|!|-|_|#| |)(a|A)(|.txt|.TXT)(|.exe)";
+        private const string filenamePattern = "testfile(&|%|$|!|-|_|#| |)(a|B)(|.txt|.BIN)(|.exe)";
 
 
         [TestInitialize]
@@ -77,7 +77,7 @@ namespace LibraryTests
         [TestMethod]
         public void TestGetFilename()
         {
-            var expanded = RegexExpander.Expand(filenamePattern);
+            var expanded = RegexExpander.Expand(filenamePattern, true);
             var expandedPrefixed = expanded.Select(x => Path.Combine(this.basePath, "testgetfilename", x)).ToList();
 
             foreach (var filePath in expandedPrefixed)
@@ -92,7 +92,7 @@ namespace LibraryTests
         [TestMethod]
         public void TestFilesize()
         {
-            var expanded = RegexExpander.Expand(filenamePattern);
+            var expanded = RegexExpander.Expand(filenamePattern, true);
             var subdirA = CreateSubDirectory(Path.Combine("testfilesize", "folderA"));
 
             var expandedPrefixed = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
@@ -105,7 +105,7 @@ namespace LibraryTests
         [TestMethod]
         public void TestCopy()
         {
-            var expanded = RegexExpander.Expand(filenamePattern);
+            var expanded = RegexExpander.Expand(filenamePattern, true);
             var subdirA = CreateSubDirectory(Path.Combine("testfilesize", "folderA"));
             var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
 
@@ -115,7 +115,7 @@ namespace LibraryTests
             LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false);
             var directories = Directory.GetDirectories(subdirB, "*", SearchOption.TopDirectoryOnly);
             Assert.IsFalse(directories.Any()); // ensure there are no directories in the target dir
-            
+
             foreach (var fileName in expanded) // ensure that all files that are in the source directory are also in the target directory
             {
                 Assert.IsTrue(File.Exists(Path.Combine(subdirB, fileName)));
@@ -148,24 +148,31 @@ namespace LibraryTests
         /// </summary>
         /// <param name="files">The filenames of the files that are to be created.</param>
         /// <returns>The total number of bytes written.</returns>
-        private int CreateAndFillFiles(List<string> files)
+        private long CreateAndFillFiles(List<string> files)
         {
-            int totalLength = 0;
+            long totalLength = 0;
             int nextByte = 234;
 
             for (int i = 0; i < files.Count; i++)
             {
-                var path = files[i];
-                int fileLength = nextByte * 500 + 512;
-                using (var handle = File.OpenWrite(path))
+                int fileLength = nextByte++ * 500 + 512;
+
+                var arr = new byte[fileLength];
+
+                for (int j = 0; j < fileLength; j++)
                 {
-                    for (int j = 0; j < fileLength; j++)
-                    {
-                        handle.WriteByte((byte)nextByte);
-                        nextByte = (nextByte * 9 + 25) % 255;
-                        totalLength++;
-                    }
+                    arr[j] = (byte)nextByte;
+                    nextByte = (nextByte * 11 + 25) % 255;
                 }
+
+                if (File.Exists(files[i]))
+                {
+                    throw new System.Exception();
+                }
+
+                File.WriteAllBytes(files[i], arr);
+                totalLength += new FileInfo(files[i]).Length;
+
             }
 
             return totalLength;

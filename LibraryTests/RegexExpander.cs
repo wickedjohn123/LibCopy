@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace UnitTests
@@ -12,7 +10,7 @@ namespace UnitTests
         /// Expands a pattern-string such as "Test(a|A)" to new[]{"Testa","TestA"}
         /// </summary>
         /// <param name="input">A pattern-string containing one or more cases of (string1|string2|...|stringN).</param>
-        public static List<string> Expand(string input)
+        public static List<string> Expand(string input, bool filterDuplicates)
         {
             var expandedCases = new List<string>();
             var casesLeftToCompute = new Queue<string>();
@@ -38,7 +36,15 @@ namespace UnitTests
                 }
                 else
                 {
-                    expandedCases.Add(currentCase);
+                    if (filterDuplicates)
+                    {
+                        if (!expandedCases.Contains(currentCase)) // filter out duplicates
+                            expandedCases.Add(currentCase);
+                    }
+                    else
+                    {
+                        expandedCases.Add(currentCase);
+                    }
                 }
             }
 
