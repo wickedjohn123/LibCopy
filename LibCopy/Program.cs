@@ -2,7 +2,6 @@
 using System.IO;
 using CommandLine;
 
-//Todo: If Verbose is set, output the total size of the files. 
 // testing ci!
 // Exit Codes:
 // 0: Success 

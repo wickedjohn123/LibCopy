@@ -36,6 +36,17 @@ namespace LibCopy
             return name[name.Length];
         }
 
+        public static float FileSize(params string[] files)
+        {
+            float size = 0;
+            foreach (var file in files)
+            {
+                size += new FileInfo(file).Length;
+            }
+
+            return size;
+        }
+
         /// <summary>
         /// Copies the files into the specified directory.
         /// </summary>
@@ -48,7 +59,10 @@ namespace LibCopy
                 Environment.Exit(1);
 
             int badFiles = 0;
-
+            
+            if (verbose)
+                Console.WriteLine($"Size of files in bytes: {FileSize(files)}");
+            
             Parallel.ForEach(files, (x) =>
             {
                 if (!VerifyFile(x))
