@@ -10,22 +10,30 @@ namespace LibCopy
     /// </summary>
     public static class Utils
     {
+        public static Tuple<bool, Exception> VerifyString(string stringcheck, Checkconditions checkconditions = Checkconditions.Null)
+        {
+            if ((checkconditions & Checkconditions.Null) != 0)
+                if (stringcheck == null)
+                    return new Tuple<bool, Exception>(false, new ArgumentNullException());
+            if ((checkconditions & Checkconditions.EmptyString) != 0)
+                if (stringcheck == String.Empty)
+                    return new Tuple<bool, Exception>(false, new ArgumentException());
+            if ((checkconditions & Checkconditions.WhiteSpaceString) != Checkconditions.WhiteSpaceString)
+                if (stringcheck == " ")
+                    return new Tuple<bool, Exception>(false, new ArgumentException());
+            return new Tuple<bool, Exception>(true, null);
+        }
+
+
         /// <summary>
         /// Verifies a file exists based on the path given though the string.
         /// </summary>
         /// <param name="location">the path to the file.</param>
         /// <returns>a boolean value based on if the file is valid or not.</returns>
-        public static Tuple<bool, Exception> VerifyFile(string location, Checkconditions checkconditions = Checkconditions.None)
+        public static Tuple<bool, Exception> VerifyFile(string location, Nullable<Checkconditions> checkconditions = null)
         {
-            if ((checkconditions & Checkconditions.Null) != 0)
-                if (location == null)
-                    return new Tuple<bool, Exception>(false, new ArgumentNullException(nameof(location)));
-            if ((checkconditions & Checkconditions.EmptyString) != 0)
-                if (location == String.Empty)
-                    return new Tuple<bool, Exception>(false, new InvalidOperationException(nameof(location)));
-            if ((checkconditions & Checkconditions.WhiteSpaceString) != Checkconditions.WhiteSpaceString)
-                if (location == " ")
-                    return new Tuple<bool, Exception>(false, new ArgumentException(nameof(location)));
+            if (checkconditions != null)
+                return VerifyString(location, checkconditions.Value);
             return new Tuple<bool, Exception>(File.Exists(location), null);
         }
 
@@ -34,17 +42,10 @@ namespace LibCopy
         /// </summary>
         /// <param name="directory">the path to the directory.</param>
         /// <returns>a boolean value based on if the directory is valid or not.</returns>
-        public static Tuple<bool, Exception> VerifyDirectory(string directory, Checkconditions checkconditions = Checkconditions.None)
+        public static Tuple<bool, Exception> VerifyDirectory(string directory, Nullable<Checkconditions> checkconditions = null)
         {
-            if ((checkconditions & Checkconditions.Null) != 0)
-                if (directory == null)
-                    return new Tuple<bool, Exception>(false, new ArgumentNullException(nameof(directory)));
-            if ((checkconditions & Checkconditions.EmptyString) != 0)
-                if (directory == String.Empty)
-                    return new Tuple<bool, Exception>(false, new InvalidOperationException(nameof(directory)));
-            if ((checkconditions & Checkconditions.WhiteSpaceString) != Checkconditions.WhiteSpaceString)
-                if (directory == " ")
-                    return new Tuple<bool, Exception>(false, new ArgumentException(nameof(directory)));
+            if (checkconditions != null)
+                return VerifyString(directory, checkconditions.Value);
             return new Tuple<bool, Exception>(Directory.Exists(directory), null);
         }
 
@@ -94,9 +95,9 @@ namespace LibCopy
         /// <param name="verbose">specifies if console output is requires.</param>
         public static void Copy(string[] files, string directory, bool verbose)
         {
-            if (!VerifyDirectory(directory).Item1)
-                Environment.Exit(1);
-
+            var dex = VerifyFile(directory);
+            if (dex.Item1)
+                throw dex.Item2;
             int badFiles = 0;
 
             if (verbose)
@@ -104,9 +105,9 @@ namespace LibCopy
 
             Parallel.ForEach(files, (x) =>
             {
-                var ex = VerifyFile(x);
+                var xex = VerifyFile(x);
 
-                if (!ex.Item1)
+                if (!xex.Item1)
                 {
                     if (verbose)
                     {
@@ -118,7 +119,7 @@ namespace LibCopy
                     }
 
                     Interlocked.Increment(ref badFiles);
-                    throw ex.Item2;
+                    throw xex.Item2;
                 }
                 else
                 {
@@ -126,19 +127,19 @@ namespace LibCopy
                 }
             });
 
-            if (files.Length == badFiles)
-                Environment.Exit(2);
-            else
-                Environment.Exit(0);
+            //if (files.Length == badFiles)
+            //    Environment.Exit(2);
+            //else
+            //    Environment.Exit(0);
         }
 
         [Flags]
         public enum Checkconditions
         {
-            None,
-            Null,
-            EmptyString,
-            WhiteSpaceString
+            None = 1,
+            Null = 2,
+            EmptyString = 3,
+            WhiteSpaceString = 4
         }
 
     }
