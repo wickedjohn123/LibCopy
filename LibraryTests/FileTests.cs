@@ -43,12 +43,12 @@ namespace LibraryTests
                     tempFilePath += ".txt";
                 }
 
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempFilePath));
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempFilePath).Item1);
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath).Item1);
                 File.WriteAllText(tempFilePath, "This is a test file.", Encoding.Default);
 
-                Assert.IsTrue(LibCopy.Utils.VerifyFile(tempFilePath));
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
+                Assert.IsTrue(LibCopy.Utils.VerifyFile(tempFilePath).Item1);
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath).Item1);
             }
         }
 
@@ -66,11 +66,11 @@ namespace LibraryTests
                     tempDirectoryPath += ".txt";
                 }
 
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempDirectoryPath).Item1);
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath).Item1);
                 Directory.CreateDirectory(tempDirectoryPath);
-                Assert.IsTrue(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
+                Assert.IsTrue(LibCopy.Utils.VerifyDirectory(tempDirectoryPath).Item1);
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath).Item1);
             }
         }
 

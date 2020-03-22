@@ -15,12 +15,18 @@ namespace LibCopy
         /// </summary>
         /// <param name="location">the path to the file.</param>
         /// <returns>a boolean value based on if the file is valid or not.</returns>
-        public static bool VerifyFile(string location)
+        public static Tuple<bool, Exception> VerifyFile(string location, Checkconditions checkconditions = Checkconditions.None)
         {
-            bool valid = false;
-            if (!string.IsNullOrWhiteSpace(location))
-                valid = File.Exists(location);
-            return valid;
+            if ((checkconditions & Checkconditions.Null) != 0)
+                if (location == null)
+                    return new Tuple<bool, Exception>(false, new ArgumentNullException(nameof(location)));
+            if ((checkconditions & Checkconditions.EmptyString) != 0)
+                if (location == String.Empty)
+                    return new Tuple<bool, Exception>(false, new InvalidOperationException(nameof(location)));
+            if ((checkconditions & Checkconditions.WhiteSpaceString) != Checkconditions.WhiteSpaceString)
+                if (location == " ")
+                    return new Tuple<bool, Exception>(false, new ArgumentException(nameof(location)));
+            return new Tuple<bool, Exception>(File.Exists(location), null);
         }
 
         /// <summary>
@@ -28,12 +34,18 @@ namespace LibCopy
         /// </summary>
         /// <param name="directory">the path to the directory.</param>
         /// <returns>a boolean value based on if the directory is valid or not.</returns>
-        public static bool VerifyDirectory(string directory)
+        public static Tuple<bool, Exception> VerifyDirectory(string directory, Checkconditions checkconditions = Checkconditions.None)
         {
-            bool valid = false;
-            if (!string.IsNullOrWhiteSpace(directory))
-                valid = Directory.Exists(directory);
-            return valid;
+            if ((checkconditions & Checkconditions.Null) != 0)
+                if (directory == null)
+                    return new Tuple<bool, Exception>(false, new ArgumentNullException(nameof(directory)));
+            if ((checkconditions & Checkconditions.EmptyString) != 0)
+                if (directory == String.Empty)
+                    return new Tuple<bool, Exception>(false, new InvalidOperationException(nameof(directory)));
+            if ((checkconditions & Checkconditions.WhiteSpaceString) != Checkconditions.WhiteSpaceString)
+                if (directory == " ")
+                    return new Tuple<bool, Exception>(false, new ArgumentException(nameof(directory)));
+            return new Tuple<bool, Exception>(Directory.Exists(directory), null);
         }
 
         /// <summary>
@@ -43,8 +55,9 @@ namespace LibCopy
         /// <returns></returns>
         public static string FileName(string filePath)
         {
-            if (VerifyFile(filePath) == false)
-                throw new ArgumentNullException();
+            var ex = VerifyFile(filePath, Checkconditions.Null);
+            if (ex.Item1 == false)
+                throw ex.Item2;
 
             // Todo: Find a less hacky method of getting the file's name.
             string[] name = filePath.Split(Path.DirectorySeparatorChar);
@@ -81,7 +94,7 @@ namespace LibCopy
         /// <param name="verbose">specifies if console output is requires.</param>
         public static void Copy(string[] files, string directory, bool verbose)
         {
-            if (VerifyDirectory(directory))
+            if (!VerifyDirectory(directory).Item1)
                 Environment.Exit(1);
 
             int badFiles = 0;
@@ -91,7 +104,9 @@ namespace LibCopy
 
             Parallel.ForEach(files, (x) =>
             {
-                if (!VerifyFile(x))
+                var ex = VerifyFile(x);
+
+                if (!ex.Item1)
                 {
                     if (verbose)
                     {
@@ -103,6 +118,7 @@ namespace LibCopy
                     }
 
                     Interlocked.Increment(ref badFiles);
+                    throw ex.Item2;
                 }
                 else
                 {
@@ -115,5 +131,15 @@ namespace LibCopy
             else
                 Environment.Exit(0);
         }
+
+        [Flags]
+        public enum Checkconditions
+        {
+            None,
+            Null,
+            EmptyString,
+            WhiteSpaceString
+        }
+
     }
 }
