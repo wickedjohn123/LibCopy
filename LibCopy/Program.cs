@@ -2,7 +2,6 @@
 using System.IO;
 using CommandLine;
 
-// testing ci!
 // Exit Codes:
 // 0: Success 
 // 1: Bad Directory
