@@ -40,8 +40,33 @@ namespace LibraryTests
                 }
 
                 Assert.IsFalse(LibCopy.Utils.VerifyFile(tempFilePath));
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
                 File.WriteAllText(tempFilePath, "This is a test file.", Encoding.Default);
+
                 Assert.IsTrue(LibCopy.Utils.VerifyFile(tempFilePath));
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
+            }
+        }
+
+        [TestMethod]
+        public void EnsureDirectoryExists()
+        {
+            Directory.CreateDirectory(Path.Combine(basePath, "direxiststest"));
+
+            for (int i = 0; i < 10; i++)
+            {
+                string tempDirectoryPath = Path.Combine(this.basePath, "direxiststest", this.utilObj.GetTempDirName());
+
+                if (i > 4) // use a name which contains a dot
+                {
+                    tempDirectoryPath += ".txt";
+                }
+
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
+                Directory.CreateDirectory(tempDirectoryPath);
+                Assert.IsTrue(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
             }
         }
 

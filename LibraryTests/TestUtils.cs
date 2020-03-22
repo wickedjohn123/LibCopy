@@ -15,6 +15,13 @@ namespace UnitTests
 
         private static int nextTempFileNumber = 0;
 
+        private static int GetAndIncrementNextTempDirNumber()
+        {
+            return nextTempDirNumber++;
+        }
+
+        private static int nextTempDirNumber = 0;
+
 
         public TestUtils(string basePath)
         {
@@ -24,6 +31,11 @@ namespace UnitTests
         public string GetTempFileName()
         {
             return "tempfile" + GetAndIncrementNextTempFileNumber();
+        } 
+        
+        public string GetTempDirName()
+        {
+            return "tempdir" + GetAndIncrementNextTempDirNumber();
         }
     }
 }
