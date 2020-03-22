@@ -36,6 +36,11 @@ namespace LibCopy
             return name[name.Length];
         }
 
+        /// <summary>
+        /// Gets the size of all the files passed to it and returns the size in bytes.
+        /// </summary>
+        /// <param name="files">all of the files' filepath.</param>
+        /// <returns>total size of all the files in bytes.</returns>
         public static float FileSize(params string[] files)
         {
             float size = 0;
