@@ -12,7 +12,7 @@ namespace LibraryTests
     {
         private string basePath = null;
         private TestUtils utilObj = null;
-        private string filenamePattern = "testfile(&|%|$|!|)(a|A)(|.txt|.TXT)(|.exe)";
+        private const string filenamePattern = "testfile(&|%|$|!|-|_|#| |)(a|A)(|.txt|.TXT)(|.exe)";
 
 
         [TestInitialize]
@@ -77,7 +77,7 @@ namespace LibraryTests
         [TestMethod]
         public void TestGetFilename()
         {
-            var expanded = RegexExpander.Expand(this.filenamePattern);
+            var expanded = RegexExpander.Expand(filenamePattern);
             var expandedPrefixed = expanded.Select(x => Path.Combine(this.basePath, "testgetfilename", x)).ToList();
 
             foreach (var filePath in expandedPrefixed)
@@ -92,7 +92,7 @@ namespace LibraryTests
         [TestMethod]
         public void TestFilesize()
         {
-            var expanded = RegexExpander.Expand(this.filenamePattern);
+            var expanded = RegexExpander.Expand(filenamePattern);
             var subdirA = CreateSubDirectory(Path.Combine("testfilesize", "folderA"));
             var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
 
