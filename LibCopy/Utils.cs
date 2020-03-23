@@ -10,31 +10,17 @@ namespace LibCopy
     /// </summary>
     public static class Utils
     {
-        public static Tuple<bool, Exception> VerifyString(string stringcheck, Checkconditions checkconditions = Checkconditions.Null)
-        {
-            if ((checkconditions & Checkconditions.Null) != 0)
-                if (stringcheck == null)
-                    return new Tuple<bool, Exception>(false, new ArgumentNullException());
-            if ((checkconditions & Checkconditions.EmptyString) != 0)
-                if (stringcheck == String.Empty)
-                    return new Tuple<bool, Exception>(false, new ArgumentException());
-            if ((checkconditions & Checkconditions.WhiteSpaceString) != Checkconditions.WhiteSpaceString)
-                if (stringcheck == " ")
-                    return new Tuple<bool, Exception>(false, new ArgumentException());
-            return new Tuple<bool, Exception>(true, null);
-        }
-
-
         /// <summary>
         /// Verifies a file exists based on the path given though the string.
         /// </summary>
         /// <param name="location">the path to the file.</param>
         /// <returns>a boolean value based on if the file is valid or not.</returns>
-        public static Tuple<bool, Exception> VerifyFile(string location, Nullable<Checkconditions> checkconditions = null)
+        public static bool VerifyFile(string location)
         {
-            if (checkconditions != null)
-                return VerifyString(location, checkconditions.Value);
-            return new Tuple<bool, Exception>(File.Exists(location), null);
+            bool valid = false;
+            if (!string.IsNullOrWhiteSpace(location))
+                valid = File.Exists(location);
+            return valid;
         }
 
         /// <summary>
@@ -42,11 +28,12 @@ namespace LibCopy
         /// </summary>
         /// <param name="directory">the path to the directory.</param>
         /// <returns>a boolean value based on if the directory is valid or not.</returns>
-        public static Tuple<bool, Exception> VerifyDirectory(string directory, Nullable<Checkconditions> checkconditions = null)
+        public static bool VerifyDirectory(string directory)
         {
-            if (checkconditions != null)
-                return VerifyString(directory, checkconditions.Value);
-            return new Tuple<bool, Exception>(Directory.Exists(directory), null);
+            bool valid = false;
+            if (!string.IsNullOrWhiteSpace(directory))
+                valid = Directory.Exists(directory);
+            return valid;
         }
 
         /// <summary>
@@ -56,9 +43,8 @@ namespace LibCopy
         /// <returns></returns>
         public static string FileName(string filePath)
         {
-            var ex = VerifyFile(filePath, Checkconditions.Null);
-            if (ex.Item1 == false)
-                throw ex.Item2;
+            if (filePath == null)
+                throw new ArgumentNullException();
 
             // Todo: Find a less hacky method of getting the file's name.
             string[] name = filePath.Split(Path.DirectorySeparatorChar);
@@ -95,9 +81,9 @@ namespace LibCopy
         /// <param name="verbose">specifies if console output is requires.</param>
         public static void Copy(string[] files, string directory, bool verbose)
         {
-            var dex = VerifyFile(directory);
-            if (dex.Item1)
-                throw dex.Item2;
+            if (!VerifyDirectory(directory))
+                throw new DirectoryNotFoundException();
+
             int badFiles = 0;
 
             if (verbose)
@@ -105,9 +91,7 @@ namespace LibCopy
 
             Parallel.ForEach(files, (x) =>
             {
-                var xex = VerifyFile(x);
-
-                if (!xex.Item1)
+                if (!VerifyFile(x))
                 {
                     if (verbose)
                     {
@@ -119,7 +103,6 @@ namespace LibCopy
                     }
 
                     Interlocked.Increment(ref badFiles);
-                    throw xex.Item2;
                 }
                 else
                 {
@@ -127,20 +110,9 @@ namespace LibCopy
                 }
             });
 
+            // wtf is this
             //if (files.Length == badFiles)
             //    Environment.Exit(2);
-            //else
-            //    Environment.Exit(0);
         }
-
-        [Flags]
-        public enum Checkconditions
-        {
-            None = 1,
-            Null = 2,
-            EmptyString = 3,
-            WhiteSpaceString = 4
-        }
-
     }
 }

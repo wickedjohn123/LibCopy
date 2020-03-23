@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using LibCopy;
 
 namespace LibraryTests
 {
@@ -12,8 +11,8 @@ namespace LibraryTests
         {
             try
             {
-                var res = LibCopy.Utils.VerifyFile(null, Utils.Checkconditions.Null);
-                Assert.IsFalse(res.Item1);
+                var res = LibCopy.Utils.VerifyFile(null);
+                Assert.IsFalse(res);
             }
             catch (Exception ex)
             {
@@ -26,8 +25,8 @@ namespace LibraryTests
         {
             try
             {
-                var res = LibCopy.Utils.VerifyDirectory(null, Utils.Checkconditions.Null);
-                Assert.IsFalse(res.Item1);
+                var res = LibCopy.Utils.VerifyDirectory(null);
+                Assert.IsFalse(res);
             }
             catch (Exception ex)
             {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using LibCopy;
 using UnitTests;
 
 namespace LibraryTests
@@ -44,12 +43,12 @@ namespace LibraryTests
                     tempFilePath += ".txt";
                 }
 
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempFilePath).Item1);
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath).Item1);
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempFilePath));
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
                 File.WriteAllText(tempFilePath, "This is a test file.", Encoding.Default);
 
-                Assert.IsTrue(LibCopy.Utils.VerifyFile(tempFilePath).Item1);
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath).Item1);
+                Assert.IsTrue(LibCopy.Utils.VerifyFile(tempFilePath));
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
             }
         }
 
@@ -67,11 +66,11 @@ namespace LibraryTests
                     tempDirectoryPath += ".txt";
                 }
 
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempDirectoryPath).Item1);
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath).Item1);
+                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
                 Directory.CreateDirectory(tempDirectoryPath);
-                Assert.IsTrue(LibCopy.Utils.VerifyDirectory(tempDirectoryPath, Utils.Checkconditions.Null).Item1);
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath).Item1);
+                Assert.IsTrue(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
             }
         }
 
@@ -111,10 +110,9 @@ namespace LibraryTests
             var subdirB = CreateSubDirectory(Path.Combine("testfilesize", "folderB"));
 
             var expandedPrefixedA = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
-            var expandedPrefixedB = expanded.Select(x => Path.Combine(subdirB, x)).ToList();
-            
+
             CreateAndFillFiles(expandedPrefixedA);
-            
+
             LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false);
             var directories = Directory.GetDirectories(subdirB, "*", SearchOption.TopDirectoryOnly);
             Assert.IsFalse(directories.Any()); // ensure there are no directories in the target dir
