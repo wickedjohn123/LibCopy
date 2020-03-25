@@ -28,6 +28,9 @@ namespace LibCopy
 
             [Option('f', "Filter", Required = false, HelpText = "Filters the files that will be copied.", Default = null)]
             public string Filter { get; set; }
+
+            [Option('o', "Overwrite", Required = false, HelpText = "Enables the application to overwrite files.", Default = false)]
+            public bool Overwrite { get; set; }
         }
         
         static void Main(string[] args)
@@ -43,16 +46,16 @@ namespace LibCopy
                             string[] filitersplit = o.Filter.Split('.');
                             if (filitersplit.Length > 0)
                             {
-                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[1], o.Verbose);
+                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[1], o.Verbose, o.Overwrite);
                             }
                             else
                             {
-                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[0], o.Verbose);
+                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[0], o.Verbose, o.Overwrite);
                             }
                         }
                         else
                         {
-                            Utils.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose);
+                            Utils.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose, o.Overwrite);
                         }
                     }
                     else

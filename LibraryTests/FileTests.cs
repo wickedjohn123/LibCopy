@@ -113,7 +113,7 @@ namespace LibraryTests
 
             CreateAndFillFiles(expandedPrefixedA);
 
-            LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false);
+            LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false, false);
             var directories = Directory.GetDirectories(subdirB, "*", SearchOption.TopDirectoryOnly);
             Assert.IsFalse(directories.Any()); // ensure there are no directories in the target dir
 

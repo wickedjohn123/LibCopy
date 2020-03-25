@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -79,7 +80,7 @@ namespace LibCopy
         /// <param name="files">File Paths.</param>
         /// <param name="directory">Directory Path</param>
         /// <param name="verbose">specifies if console output is requires.</param>
-        public static void Copy(string[] files, string directory, bool verbose)
+        public static void Copy(string[] files, string directory, bool verbose, bool overwrite)
         {
             if (!VerifyDirectory(directory))
                 throw new DirectoryNotFoundException();
@@ -106,6 +107,14 @@ namespace LibCopy
                 }
                 else
                 {
+                    if (overwrite)
+                    {
+                        if (File.Exists(x))
+                        {
+                            File.Delete(x);
+                        }
+                    }
+
                     File.Copy(x, $"{directory}\\{FileName(x)}");
                 }
             });
@@ -118,7 +127,7 @@ namespace LibCopy
         /// <param name="directory">Directory Path</param>
         /// <param name="filter">The filter argument for copying files.</param>
         /// <param name="verbose">specifies if console output is requires.</param>
-        public static void Copy(string[] files, string directory, string filter, bool verbose)
+        public static void Copy(string[] files, string directory, string filter, bool verbose, bool overwrite)
         {
             if (!VerifyDirectory(directory))
                 throw new DirectoryNotFoundException();
@@ -149,6 +158,14 @@ namespace LibCopy
                     // Todo: make this more safe!
                     if (Fn.Split('.')[1] == filter)
                     {
+                        if (overwrite)
+                        {
+                            if (File.Exists(x))
+                            {
+                                File.Delete(x);
+                            }
+                        }
+                        
                         File.Copy(x, $"{directory}\\{FileName(x)}");
                     }
                 }
