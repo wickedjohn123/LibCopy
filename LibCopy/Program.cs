@@ -21,10 +21,11 @@ namespace LibCopy
             public bool Verbose  { get; set; }
 
             [Option('s', "Source", Required = false, HelpText = "copies everything inside of directory; just a bit more convenient than writing down a hundred file locations.")]
-            public string Xdirectory { get; set; }
+            public string Source { get; set; }
 
             [Option('d', "Destination", Required = true, HelpText = "Filepath where the files will be copied into.")]
-            public string Directory { get; set; }
+            public string Destination { get; set; }
+            
         }
         
         static void Main(string[] args)
@@ -33,9 +34,9 @@ namespace LibCopy
             {
                 Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
                 {
-                    if (Directory.Exists(o.Xdirectory))
+                    if (Directory.Exists(o.Source))
                     {
-                        Utils.Copy(Directory.GetFiles(o.Xdirectory), o.Directory, o.Verbose);
+                        Utils.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose);
                     }
                     else
                     {
