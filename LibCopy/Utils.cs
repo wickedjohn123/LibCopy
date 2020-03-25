@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -116,9 +117,9 @@ namespace LibCopy
                     }
                     
                     if (verbose)
-                        Console.WriteLine($"Transfered {x} -> {directory}\\{FileName(x)}");
+                        Console.WriteLine($"Transfered {x} -> {Path.Combine(directory,FileName(x))}");
                     
-                    File.Copy(x, $"{directory}\\{FileName(x)}");
+                    File.Copy(x, $"{Path.Combine(directory,FileName(x))}");
                 }
             });
         }
@@ -132,50 +133,21 @@ namespace LibCopy
         /// <param name="verbose">specifies if console output is requires.</param>
         public static void Copy(string[] files, string directory, string filter, bool verbose, bool overwrite)
         {
-            if (!VerifyDirectory(directory))
-                throw new DirectoryNotFoundException();
-            
             if (string.IsNullOrWhiteSpace(filter))
                 throw new ArgumentException("the Filter argument is incorrect.");
             
-            if (verbose)
-                Console.WriteLine($"Size of files in bytes: {FileSize(files)}");
-
-            Parallel.ForEach(files, (x) =>
+            List<string> NewFilesCollection = new List<string>();
+            foreach (var file in files)
             {
-                if (!VerifyFile(x))
-                {
-                    if (verbose)
-                    {
-                        //Todo: Better Logging.
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write($"File {x} has errored for some reason; " +
-                                      $"most likely because the filepath is incorrect.");
-                        Console.ResetColor();
-                    }
-                }
-                else
-                {
-                    string Fn = FileName(x);
+                string Fn = FileName(file);
                     
-                    // Todo: make this more safe!
-                    if (Fn.Split('.')[1] == filter)
-                    {
-                        if (overwrite)
-                        {
-                            if (File.Exists(x))
-                            {
-                                File.Delete(x);
-                            }
-                        }
-                        
-                        if (verbose)
-                            Console.WriteLine($"Transfered {x} -> {directory}\\{Fn}");
-                        
-                        File.Copy(x, $"{directory}\\{Fn}");
-                    }
+                // Todo: make this more safe!
+                if (Fn.Split('.')[1] == filter)
+                {
+                    NewFilesCollection.Add(Path.Combine(directory,FileName(file)));
                 }
-            });
+            }
+            Copy(NewFilesCollection.ToArray(), directory, verbose, overwrite);
         }
     }
 }
