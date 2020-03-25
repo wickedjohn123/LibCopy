@@ -25,7 +25,9 @@ namespace LibCopy
 
             [Option('d', "Destination", Required = true, HelpText = "Filepath where the files will be copied into.")]
             public string Destination { get; set; }
-            
+
+            [Option('f', "Filter", Required = false, HelpText = "Filters the files that will be copied.", Default = null)]
+            public string Filter { get; set; }
         }
         
         static void Main(string[] args)
@@ -36,7 +38,22 @@ namespace LibCopy
                 {
                     if (Directory.Exists(o.Source))
                     {
-                        Utils.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose);
+                        if (o.Filter != null)
+                        {
+                            string[] filitersplit = o.Filter.Split('.');
+                            if (filitersplit.Length > 0)
+                            {
+                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[1], o.Verbose);
+                            }
+                            else
+                            {
+                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[0], o.Verbose);
+                            }
+                        }
+                        else
+                        {
+                            Utils.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose);
+                        }
                     }
                     else
                     {

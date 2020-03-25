@@ -109,10 +109,50 @@ namespace LibCopy
                     File.Copy(x, $"{directory}\\{FileName(x)}");
                 }
             });
+        }
 
-            // wtf is this
-            //if (files.Length == badFiles)
-            //    Environment.Exit(2);
+        /// <summary>
+        /// Copies the files into the specified directory.
+        /// </summary>
+        /// <param name="files">File Paths.</param>
+        /// <param name="directory">Directory Path</param>
+        /// <param name="filter">The filter argument for copying files.</param>
+        /// <param name="verbose">specifies if console output is requires.</param>
+        public static void Copy(string[] files, string directory, string filter, bool verbose)
+        {
+            if (!VerifyDirectory(directory))
+                throw new DirectoryNotFoundException();
+            
+            if (string.IsNullOrWhiteSpace(filter))
+                throw new ArgumentException("the Filter argument is incorrect.");
+            
+            if (verbose)
+                Console.WriteLine($"Size of files in bytes: {FileSize(files)}");
+
+            Parallel.ForEach(files, (x) =>
+            {
+                if (!VerifyFile(x))
+                {
+                    if (verbose)
+                    {
+                        //Todo: Better Logging.
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write($"File {x} has errored for some reason; " +
+                                      $"most likely because the filepath is incorrect.");
+                        Console.ResetColor();
+                    }
+                }
+                else
+                {
+                    string Fn = FileName(x);
+                    
+                    // Todo: make this more safe!
+                    if (Fn.Split('.')[1] == filter)
+                    {
+                        File.Copy(x, $"{directory}\\{FileName(x)}");
+                    }
+                }
+            });
         }
     }
 }
