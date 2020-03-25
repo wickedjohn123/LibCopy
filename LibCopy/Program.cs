@@ -29,16 +29,24 @@ namespace LibCopy
         
         static void Main(string[] args)
         {
-            Parser.Default.ParseArguments<Options>(args).WithParsed(o => {
-                if (Directory.Exists(o.Xdirectory))
+            try
+            {
+                Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
                 {
-                    Utils.Copy(Directory.GetFiles(o.Xdirectory), o.Directory, o.Verbose);
-                }
-                else
-                {
-                    Environment.Exit(3);
-                }
-            });
+                    if (Directory.Exists(o.Xdirectory))
+                    {
+                        Utils.Copy(Directory.GetFiles(o.Xdirectory), o.Directory, o.Verbose);
+                    }
+                    else
+                    {
+                        Environment.Exit(3);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong!");
+            }
         }
     }
 }
