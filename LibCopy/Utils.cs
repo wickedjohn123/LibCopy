@@ -114,7 +114,10 @@ namespace LibCopy
                             File.Delete(x);
                         }
                     }
-
+                    
+                    if (verbose)
+                        Console.WriteLine($"Transfered {x} -> {directory}\\{FileName(x)}");
+                    
                     File.Copy(x, $"{directory}\\{FileName(x)}");
                 }
             });
@@ -166,7 +169,10 @@ namespace LibCopy
                             }
                         }
                         
-                        File.Copy(x, $"{directory}\\{FileName(x)}");
+                        if (verbose)
+                            Console.WriteLine($"Transfered {x} -> {directory}\\{Fn}");
+                        
+                        File.Copy(x, $"{directory}\\{Fn}");
                     }
                 }
             });
