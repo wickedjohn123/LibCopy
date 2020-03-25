@@ -19,13 +19,11 @@ namespace LibCopy
         {
             [Option('v', "Verbose", Required = false, HelpText = "Outputs current state of the application.", Default = false)]
             public bool Verbose  { get; set; }
-            [Option('f', "File Paths", Required = false, HelpText = "Location of the files that the application will copy.")]
-            public string[] FilesToCopy { get; set; }
 
-            [Option('x', "Directory", Required = false, HelpText = "copies everything inside of directory; just a bit more convenient than writing down a hundred file locations.")]
+            [Option('s', "Source", Required = false, HelpText = "copies everything inside of directory; just a bit more convenient than writing down a hundred file locations.")]
             public string Xdirectory { get; set; }
 
-            [Option('d', "Directory to copy files into.", Required = true, HelpText = "Filepath where the files will be copied into.")]
+            [Option('d', "Destination", Required = true, HelpText = "Filepath where the files will be copied into.")]
             public string Directory { get; set; }
         }
         
@@ -35,10 +33,6 @@ namespace LibCopy
                 if (Directory.Exists(o.Xdirectory))
                 {
                     Utils.Copy(Directory.GetFiles(o.Xdirectory), o.Directory, o.Verbose);
-                }
-                else if (o.FilesToCopy.Length != 0)
-                {
-                    Utils.Copy(o.FilesToCopy, o.Directory, o.Verbose);
                 }
                 else
                 {
