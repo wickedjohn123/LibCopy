@@ -99,7 +99,7 @@ namespace LibCopy
                     {
                         //Todo: Better Logging.
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write($"File {x} has errored for some reason; " +
+                        Console.WriteLine($"File {x} has errored for some reason; " +
                                       $"most likely because the filepath is incorrect.");
                         Console.ResetColor();
                     }
