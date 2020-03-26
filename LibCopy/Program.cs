@@ -7,6 +7,7 @@ using CommandLine;
 // 1: Bad Directory
 // 2: Bad files (if all the files are bad for example a bad path)
 // 3: Invalid command line data.
+// 4: Unknown exception killed the application.
 
 namespace LibCopy
 {
@@ -66,7 +67,7 @@ namespace LibCopy
             }
             catch (Exception e)
             {
-                Console.WriteLine("Something went wrong!");
+                Environment.Exit(4);
             }
         }
     }
