@@ -34,7 +34,7 @@ namespace LibCopy
             public bool Overwrite { get; set; }
         }
         
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             try
             {
@@ -61,14 +61,16 @@ namespace LibCopy
                     }
                     else
                     {
-                        Environment.Exit(3);
+                        throw new DirectoryNotFoundException();
                     }
                 });
             }
             catch (Exception e)
             {
-                Environment.Exit(4);
+                return 4;
             }
+
+            return 0;
         }
     }
 }
