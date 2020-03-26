@@ -21,7 +21,7 @@ namespace LibraryTests
         private void EnsureMethodIsNotBeingCalled(MethodInfo[] methods)
         {
             var cnt = GetMethodsInfoCallCountInAssembly(typeof(Utils).Assembly, methods);
-            Assert.IsTrue(cnt == 0, $"Detected call to {methods[0].DeclaringType}.{methods[0].Name} which is not allowed!");
+            Assert.IsTrue(cnt == 0, $"Detected {cnt} call(s) to {methods[0].DeclaringType}.{methods[0].Name} which is not allowed!");
         }
 
         private int GetMethodsInfoCallCountInAssembly(Assembly assemblyToSearch, MethodInfo[] methodsCallsToFind)
