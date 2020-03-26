@@ -31,6 +31,8 @@ namespace LibraryTests
             for (int i = 0; i < methodsCallsToFind.Length; i++)
             {
                 var mi = methodsCallsToFind[i];
+
+                // TODO decrease the assembly read calls
                 var types = AssemblyDefinition.ReadAssembly(mi.DeclaringType.Assembly.Location).Modules.SelectMany(m => m.Types).Where(t => t.FullName.Equals(mi.DeclaringType.FullName)).ToList();
                 if (types.Count() > 1)
                 {
