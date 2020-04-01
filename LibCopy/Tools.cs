@@ -107,18 +107,28 @@ namespace LibCopy
                 }
                 else
                 {
-                    if (overwrite)
+                    if (File.Exists(x))
                     {
-                        if (File.Exists(x))
+                        if (overwrite)
                         {
+                            if (verbose)
+                                Console.WriteLine($"Copying file '{x}' -> '{Path.Combine(targetDirectory, FileName(x))}' (overwriting destination)");
+
                             File.Delete(x);
+                            File.Copy(x, $"{Path.Combine(targetDirectory, FileName(x))}");
+                        }
+                        else
+                        {
+                            if (verbose)
+                                Console.WriteLine($"Skipping file '{x}' -> '{Path.Combine(targetDirectory, FileName(x))}' (specify --overwrite to overwrite destination)");
                         }
                     }
-
-                    if (verbose)
-                        Console.WriteLine($"Transfered {x} -> {Path.Combine(targetDirectory, FileName(x))}");
-
-                    File.Copy(x, $"{Path.Combine(targetDirectory, FileName(x))}");
+                    else
+                    {
+                        if (verbose)
+                            Console.WriteLine($"Copying file '{x}' -> '{Path.Combine(targetDirectory, FileName(x))}'");
+                        File.Copy(x, $"{Path.Combine(targetDirectory, FileName(x))}");
+                    }
                 }
             });
         }
