@@ -107,7 +107,7 @@ namespace LibCopy
                 }
                 else
                 {
-                    if (File.Exists(x))
+                    if (File.Exists(Path.Combine(targetDirectory, FileName(x))))
                     {
                         if (overwrite)
                         {
