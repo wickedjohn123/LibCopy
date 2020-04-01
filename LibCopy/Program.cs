@@ -65,7 +65,7 @@ namespace LibCopy
                     }
                 });
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 4;
             }
