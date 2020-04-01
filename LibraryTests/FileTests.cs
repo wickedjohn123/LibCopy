@@ -43,12 +43,12 @@ namespace LibraryTests
                     tempFilePath += ".txt";
                 }
 
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempFilePath));
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
+                Assert.IsFalse(LibCopy.Tools.FileExists(tempFilePath));
+                Assert.IsFalse(LibCopy.Tools.DirectoryExists(tempFilePath));
                 File.WriteAllText(tempFilePath, "This is a test file.", Encoding.Default);
 
-                Assert.IsTrue(LibCopy.Utils.VerifyFile(tempFilePath));
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempFilePath));
+                Assert.IsTrue(LibCopy.Tools.FileExists(tempFilePath));
+                Assert.IsFalse(LibCopy.Tools.DirectoryExists(tempFilePath));
             }
         }
 
@@ -66,11 +66,11 @@ namespace LibraryTests
                     tempDirectoryPath += ".txt";
                 }
 
-                Assert.IsFalse(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Tools.DirectoryExists(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Tools.FileExists(tempDirectoryPath));
                 Directory.CreateDirectory(tempDirectoryPath);
-                Assert.IsTrue(LibCopy.Utils.VerifyDirectory(tempDirectoryPath));
-                Assert.IsFalse(LibCopy.Utils.VerifyFile(tempDirectoryPath));
+                Assert.IsTrue(LibCopy.Tools.DirectoryExists(tempDirectoryPath));
+                Assert.IsFalse(LibCopy.Tools.FileExists(tempDirectoryPath));
             }
         }
 
@@ -83,7 +83,7 @@ namespace LibraryTests
             foreach (var filePath in expandedPrefixed)
             {
                 var fn = new FileInfo(filePath).Name;
-                var libFn = LibCopy.Utils.FileName(filePath);
+                var libFn = LibCopy.Tools.FileName(filePath);
 
                 Assert.AreEqual(fn, libFn);
             }
@@ -98,7 +98,7 @@ namespace LibraryTests
             var expandedPrefixed = expanded.Select(x => Path.Combine(subdirA, x)).ToList();
 
             var size = CreateAndFillFiles(expandedPrefixed);
-            var libSize = LibCopy.Utils.FileSize(expandedPrefixed.ToArray());
+            var libSize = LibCopy.Tools.GetFileSize(expandedPrefixed.ToArray());
             Assert.AreEqual(size, libSize);
         }
 
@@ -113,7 +113,7 @@ namespace LibraryTests
 
             CreateAndFillFiles(expandedPrefixedA);
 
-            LibCopy.Utils.Copy(expandedPrefixedA.ToArray(), subdirB, false, false);
+            LibCopy.Tools.Copy(expandedPrefixedA.ToArray(), subdirB, false, false);
             var directories = Directory.GetDirectories(subdirB, "*", SearchOption.TopDirectoryOnly);
             Assert.IsFalse(directories.Any()); // ensure there are no directories in the target dir
 

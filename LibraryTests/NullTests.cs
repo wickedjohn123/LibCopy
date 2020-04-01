@@ -11,7 +11,7 @@ namespace LibraryTests
         {
             try
             {
-                var res = LibCopy.Utils.VerifyFile(null);
+                var res = LibCopy.Tools.FileExists(null);
                 Assert.IsFalse(res);
             }
             catch (Exception ex)
@@ -25,7 +25,7 @@ namespace LibraryTests
         {
             try
             {
-                var res = LibCopy.Utils.VerifyDirectory(null);
+                var res = LibCopy.Tools.DirectoryExists(null);
                 Assert.IsFalse(res);
             }
             catch (Exception ex)
@@ -37,19 +37,19 @@ namespace LibraryTests
         [TestMethod]
         public void NullCheckFilename()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileName(null));
+            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Tools.FileName(null));
         }
 
         [TestMethod]
         public void NullCheckFilesize()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileSize(null));
+            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Tools.GetFileSize(null));
         }
 
         [TestMethod]
         public void NullCheckFilesizeArray()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Utils.FileSize(new string[] { null, null }));
+            Assert.ThrowsException<ArgumentNullException>(() => LibCopy.Tools.GetFileSize(new string[] { null, null }));
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,14 +9,14 @@ namespace LibCopy
     /// <summary>
     /// Random Util functions.
     /// </summary>
-    public static class Utils
+    public static class Tools
     {
         /// <summary>
         /// Verifies a file exists based on the path given though the string.
         /// </summary>
         /// <param name="location">the path to the file.</param>
         /// <returns>a boolean value based on if the file is valid or not.</returns>
-        public static bool VerifyFile(string location)
+        public static bool FileExists(string location)
         {
             bool valid = false;
             if (!string.IsNullOrWhiteSpace(location))
@@ -30,7 +29,7 @@ namespace LibCopy
         /// </summary>
         /// <param name="directory">the path to the directory.</param>
         /// <returns>a boolean value based on if the directory is valid or not.</returns>
-        public static bool VerifyDirectory(string directory)
+        public static bool DirectoryExists(string directory)
         {
             bool valid = false;
             if (!string.IsNullOrWhiteSpace(directory))
@@ -58,7 +57,7 @@ namespace LibCopy
         /// </summary>
         /// <param name="files">all of the files' filepath.</param>
         /// <returns>total size of all the files in bytes.</returns>
-        public static float FileSize(params string[] files)
+        public static float GetFileSize(params string[] files)
         {
             if (files == null)
                 throw new ArgumentNullException();
@@ -79,21 +78,21 @@ namespace LibCopy
         /// Copies the files into the specified directory.
         /// </summary>
         /// <param name="files">File Paths.</param>
-        /// <param name="directory">Directory Path</param>
+        /// <param name="targetDirectory">Path to the directory into which to copy the files.</param>
         /// <param name="verbose">specifies if console output is requires.</param>
-        public static void Copy(string[] files, string directory, bool verbose, bool overwrite)
+        public static void Copy(string[] files, string targetDirectory, bool verbose, bool overwrite)
         {
-            if (!VerifyDirectory(directory))
+            if (!DirectoryExists(targetDirectory))
                 throw new DirectoryNotFoundException();
 
             int badFiles = 0;
 
             if (verbose)
-                Console.WriteLine($"Size of files in bytes: {FileSize(files)}");
+                Console.WriteLine($"Size of files in bytes: {GetFileSize(files)}");
 
             Parallel.ForEach(files, (x) =>
             {
-                if (!VerifyFile(x))
+                if (!FileExists(x))
                 {
                     if (verbose)
                     {
@@ -115,11 +114,11 @@ namespace LibCopy
                             File.Delete(x);
                         }
                     }
-                    
+
                     if (verbose)
-                        Console.WriteLine($"Transfered {x} -> {Path.Combine(directory,FileName(x))}");
-                    
-                    File.Copy(x, $"{Path.Combine(directory,FileName(x))}");
+                        Console.WriteLine($"Transfered {x} -> {Path.Combine(targetDirectory, FileName(x))}");
+
+                    File.Copy(x, $"{Path.Combine(targetDirectory, FileName(x))}");
                 }
             });
         }
@@ -128,26 +127,26 @@ namespace LibCopy
         /// Copies the files into the specified directory.
         /// </summary>
         /// <param name="files">File Paths.</param>
-        /// <param name="directory">Directory Path</param>
+        /// <param name="targetDirectory">Path to the directory into which to copy the files.</param>
         /// <param name="filter">The filter argument for copying files.</param>
         /// <param name="verbose">specifies if console output is requires.</param>
-        public static void Copy(string[] files, string directory, string filter, bool verbose, bool overwrite)
+        public static void FilteredCopy(string[] files, string targetDirectory, string filter, bool verbose, bool overwrite)
         {
             if (string.IsNullOrWhiteSpace(filter))
                 throw new ArgumentException("the Filter argument is incorrect.");
-            
+
             List<string> NewFilesCollection = new List<string>();
             foreach (var file in files)
             {
                 string Fn = FileName(file);
-                    
+
                 // Todo: make this more safe!
                 if (Fn.Split('.')[1] == filter)
                 {
-                    NewFilesCollection.Add(Path.Combine(directory,FileName(file)));
+                    NewFilesCollection.Add(Path.Combine(targetDirectory, FileName(file)));
                 }
             }
-            Copy(NewFilesCollection.ToArray(), directory, verbose, overwrite);
+            Copy(NewFilesCollection.ToArray(), targetDirectory, verbose, overwrite);
         }
     }
 }

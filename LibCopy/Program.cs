@@ -47,16 +47,16 @@ namespace LibCopy
                             string[] filitersplit = o.Filter.Split('.');
                             if (filitersplit.Length > 0)
                             {
-                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[1], o.Verbose, o.Overwrite);
+                                Tools.FilteredCopy(Directory.GetFiles(o.Source), o.Destination, filitersplit[1], o.Verbose, o.Overwrite);
                             }
                             else
                             {
-                                Utils.Copy(Directory.GetFiles(o.Source), o.Destination, filitersplit[0], o.Verbose, o.Overwrite);
+                                Tools.FilteredCopy(Directory.GetFiles(o.Source), o.Destination, filitersplit[0], o.Verbose, o.Overwrite);
                             }
                         }
                         else
                         {
-                            Utils.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose, o.Overwrite);
+                            Tools.Copy(Directory.GetFiles(o.Source), o.Destination, o.Verbose, o.Overwrite);
                         }
                     }
                     else
